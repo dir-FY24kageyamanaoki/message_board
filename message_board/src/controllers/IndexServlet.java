@@ -1,5 +1,9 @@
 package controllers;
 
+import java.util.List;
+import javax.persistence.EntityManager;
+import models.Message;
+import utils.DBUtil;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -25,9 +29,13 @@ public class IndexServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
-	}
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        EntityManager em = DBUtil.createEntityManager();
+
+        List<Message> messages = em.createNamedQuery("getAllMessages", Message.class).getResultList();
+        response.getWriter().append(Integer.valueOf(messages.size()).toString());
+
+        em.close();
+    }
 
 }
